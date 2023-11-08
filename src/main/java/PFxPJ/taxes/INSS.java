@@ -13,11 +13,17 @@ import org.json.JSONObject;
 
 /**
  *
- * @author leonard
+ * @author leonard Assis
+ * @version 1.0
+ * @license MIT
  *
- * The INSS class represents the INSS tax calculation for a given salary.
- * It takes the salary as a parameter and calculates the INSS tax based on it.
- * The class provides methods to set the salary, get the calculated INSS tax, and read a JSON file containing the INSS tax rates.
+ *          The INSS class represents the INSS tax calculation for a given
+ *          salary.
+ *          It takes the salary as a parameter and calculates the INSS tax based
+ *          on it.
+ *          The class provides methods to set the salary, get the calculated
+ *          INSS
+ *          tax, and read a JSON file containing the INSS tax rates.
  */
 public class INSS {
     /**
@@ -29,20 +35,38 @@ public class INSS {
      */
     private double valor_inss;
     /**
-     * A class representing a JSON object.this object contains the INSS taxes parameters
+     * A class representing a JSON object.this object contains the INSS taxes
+     * parameters
      */
     private JSONObject jsonObject;
 
     /**
      * This class represents the INSS tax calculation for a given salary.
-     * It takes the salary as a parameter and calculates the INSS tax based on it.
+     * It takes the salary as a parameter and calculates the INSS tax
+     * based on it.
+     * 
+     * @param salario the salary of the employee
      */
     public INSS(double salario) {
         this.setSalario(salario);
     }
 
     /**
+     * This class represents the INSS tax calculation for a given salary.
+     * It takes the salary as a parameter and calculates the INSS tax
+     * based on it.
+     * 
+     * @param salario    the salary of the employee
+     * @param jsonString the JSON string to set the JSONObject from
+     */
+    public INSS(double salario, String jsonString) {
+        this.setSalario(salario);
+        this.setJsonObjectFromString(jsonString);
+    }
+
+    /**
      * Returns the value of the salario attribute.
+     * 
      * @return the value of the salario attribute.
      */
     public double getSalario() {
@@ -50,7 +74,9 @@ public class INSS {
     }
 
     /**
-     * Reads a JSON file from the given file path and sets the class's jsonObject field to the parsed JSONObject.
+     * Reads a JSON file from the given file path and sets the class's jsonObject
+     * field to the parsed JSONObject.
+     * 
      * @param jsonFilePath the file path of the JSON file to be read
      */
     public void setJsonObjectFromFile(String jsonFilePath) {
@@ -73,7 +99,9 @@ public class INSS {
     }
 
     /**
-     * Reads a JSON file from a given input stream and sets the jsonObject field to its contents.
+     * Reads a JSON file from a given input stream and sets the jsonObject field to
+     * its contents.
+     * 
      * @param jsonStream the input stream containing the JSON file
      */
     public void setJsonObjectFromStream(String jsonStream) {
@@ -103,7 +131,12 @@ public class INSS {
     }
 
     /**
-     * A JSONArray is an ordered sequence of values. Its external text form is a string wrapped in square brackets with commas separating the values. The internal form is an object having get() and opt() methods for accessing the values by index, and put() methods for adding or replacing values. The values can be any of these types: Boolean, JSONArray, JSONObject, Number, String, or the JSONObject.NULL object.
+     * A JSONArray is an ordered sequence of values. Its external text form is a
+     * string wrapped in square brackets with commas separating the values. The
+     * internal form is an object having get() and opt() methods for accessing the
+     * values by index, and put() methods for adding or replacing values. The values
+     * can be any of these types: Boolean, JSONArray, JSONObject, Number, String, or
+     * the JSONObject.NULL object.
      */
     private JSONArray getInssArray() {
         if (jsonObject.has("INSS")) {
@@ -115,10 +148,12 @@ public class INSS {
 
     /**
      * Returns the maximum value for INSS tax calculation.
+     * 
      * @return the maximum value for INSS tax calculation.
-     * @throws IllegalArgumentException if the JSON object does not contain the key "Teto INSS".
+     * @throws IllegalArgumentException if the JSON object does not contain the key
+     *                                  "Teto INSS".
      */
-    private double getTetoInss() {
+    public double getTetoInss() {
         if (jsonObject.has("Teto INSS")) {
             return jsonObject.getDouble("Teto INSS");
         } else {
@@ -157,6 +192,40 @@ public class INSS {
             }
         }
         this.valor_inss = valor > this.getTetoInss() ? this.getTetoInss() : valor;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits(salario);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(valor_inss);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((jsonObject == null) ? 0 : jsonObject.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        INSS other = (INSS) obj;
+        if (Double.doubleToLongBits(salario) != Double.doubleToLongBits(other.salario))
+            return false;
+        if (Double.doubleToLongBits(valor_inss) != Double.doubleToLongBits(other.valor_inss))
+            return false;
+        if (jsonObject == null) {
+            if (other.jsonObject != null)
+                return false;
+        } else if (!jsonObject.equals(other.jsonObject))
+            return false;
+        return true;
     }
 
 }
