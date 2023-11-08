@@ -1,5 +1,4 @@
 
-
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import PFxPJ.taxes.INSS;
@@ -16,7 +15,7 @@ public class INSSTest {
         } // create an instance of INSS with a salary of 1000.0
 
         final double expected = 1000.0;
-        final double actual = inss.getSalario();
+        final double actual = inss.getSalary();
         try {
             assertEquals(expected, actual, 0.0);
         } catch (Exception e) {

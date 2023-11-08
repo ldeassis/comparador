@@ -29,29 +29,28 @@ public class INSS {
     /**
      * The salary of an employee used to calculate INSS tax.
      */
-    private double salario;
+    private double salary;
     /**
      * The value of the INSS tax.
      */
-    private double valor_inss;
+    private double contribution;
     /**
      * A class representing a JSON object.this object contains the INSS taxes
      * parameters
      */
     private JSONObject jsonObject;
 
-
     /**
      * This class represents the INSS tax calculation for a given salary.
      * It takes the salary as a parameter and calculates the INSS tax
      * based on it.
      * 
-     * @param salario    the salary of the employee
+     * @param salary    the salary of the employee
      * @param jsonString the JSON string to set the JSONObject from
      */
-    public INSS(double salario, String jsonString) {
+    public INSS(double salary, String jsonString) {
         this.setJsonObjectFromString(jsonString);
-        this.setSalario(salario);
+        this.setSalary(salary);
 
     }
 
@@ -60,8 +59,8 @@ public class INSS {
      * 
      * @return the value of the salario attribute.
      */
-    public double getSalario() {
-        return salario;
+    public double getSalary() {
+        return salary;
     }
 
     /**
@@ -109,12 +108,12 @@ public class INSS {
     /**
      * Sets the salary of the employee and calculates the INSS tax.
      * 
-     * @param salario the salary of the employee
+     * @param salary the salary of the employee
      * @throws IllegalArgumentException if the salary is less than or equal to 0
      */
-    public final void setSalario(double salario) {
-        if (salario > 0) {
-            this.salario = salario;
+    public final void setSalary(double salary) {
+        if (salary > 0) {
+            this.salary = salary;
             this.calculaInss();
         } else {
             throw new IllegalArgumentException("Salário deve ser maior que 0");
@@ -153,12 +152,12 @@ public class INSS {
     }
 
     /**
-     * Returns the value of INSS.
+     * Returns the value of INSS contribution.
      *
-     * @return the value of INSS
+     * @return the value of INSS contribution, calculated using the current formula logic
      */
-    public double getInss() {
-        return this.valor_inss;
+    public double getContribution() {
+        return this.contribution;
     }
 
     /**
@@ -177,12 +176,12 @@ public class INSS {
             double max = obj.getDouble("max");
             aliquota = obj.getDouble("aliquota");
             old_value = valor;
-            valor += (salario >= max ? max : (salario < min ? 0 : max - salario)) * aliquota;
+            valor += (salary >= max ? max : (salary < min ? 0 : max - salary)) * aliquota;
             if (old_value == valor) {
                 break;
             }
         }
-        this.valor_inss = valor > this.getTetoInss() ? this.getTetoInss() : valor;
+        this.contribution = valor > this.getTetoInss() ? this.getTetoInss() : valor;
     }
 
     @Override
@@ -190,9 +189,9 @@ public class INSS {
         final int prime = 31;
         int result = 1;
         long temp;
-        temp = Double.doubleToLongBits(salario);
+        temp = Double.doubleToLongBits(salary);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(valor_inss);
+        temp = Double.doubleToLongBits(contribution);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + ((jsonObject == null) ? 0 : jsonObject.hashCode());
         return result;
@@ -207,9 +206,9 @@ public class INSS {
         if (this.getClass() != obj.getClass())
             return false;
         INSS other = (INSS) obj;
-        if (Double.doubleToLongBits(salario) != Double.doubleToLongBits(other.salario))
+        if (Double.doubleToLongBits(salary) != Double.doubleToLongBits(other.salary))
             return false;
-        if (Double.doubleToLongBits(valor_inss) != Double.doubleToLongBits(other.valor_inss))
+        if (Double.doubleToLongBits(contribution) != Double.doubleToLongBits(other.contribution))
             return false;
         if (jsonObject == null) {
             if (other.jsonObject != null)
