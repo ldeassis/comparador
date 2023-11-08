@@ -114,7 +114,7 @@ public class INSS {
      */
     public final void setSalario(double salario) {
         if (salario > 0) {
-            this.setSalario(salario);
+            this.salario = salario;
             this.calculaInss();
         } else {
             throw new IllegalArgumentException("Salário deve ser maior que 0");
