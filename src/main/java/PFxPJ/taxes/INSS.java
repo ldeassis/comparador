@@ -40,16 +40,6 @@ public class INSS {
      */
     private JSONObject jsonObject;
 
-    /**
-     * This class represents the INSS tax calculation for a given salary.
-     * It takes the salary as a parameter and calculates the INSS tax
-     * based on it.
-     * 
-     * @param salario the salary of the employee
-     */
-    public INSS(double salario) {
-        this.setSalario(salario);
-    }
 
     /**
      * This class represents the INSS tax calculation for a given salary.
@@ -60,8 +50,9 @@ public class INSS {
      * @param jsonString the JSON string to set the JSONObject from
      */
     public INSS(double salario, String jsonString) {
-        this.setSalario(salario);
         this.setJsonObjectFromString(jsonString);
+        this.setSalario(salario);
+
     }
 
     /**
@@ -213,7 +204,7 @@ public class INSS {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (this.getClass() != obj.getClass())
             return false;
         INSS other = (INSS) obj;
         if (Double.doubleToLongBits(salario) != Double.doubleToLongBits(other.salario))
