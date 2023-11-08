@@ -1,20 +1,22 @@
-package PFxPJ.taxes;
+
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import PFxPJ.taxes.INSS;
+import PFxPJ.taxes.Parameters;
 
 public class INSSTest {
     @Test
     public void testGetSalario() {
         INSS inss = null;
         try {
-            inss = new INSS(1000.0);
+            inss = new INSS(1000.0, Parameters.JSON_EMBEMBEDED_STRING);
         } catch (Exception e) {
             e.printStackTrace();
         } // create an instance of INSS with a salary of 1000.0
 
-        double expected = 1000.0;
-        double actual = inss.getSalario();
+        final double expected = 1000.0;
+        final double actual = inss.getSalario();
         try {
             assertEquals(expected, actual, 0.0);
         } catch (Exception e) {
@@ -24,12 +26,17 @@ public class INSSTest {
 
     @Test
     public void testGetTetoInss() {
-        final INSS inss = new INSS(
-                1000.0,
-                Parameters.JSON_EMBEMBEDED_STRING);
-
+        INSS inss = null;
         try {
-            assertEquals(876.95, inss.getTetoInss());
+            inss = new INSS(1000.0, Parameters.JSON_EMBEMBEDED_STRING);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } // create an instance of INSS with a salary of 1000.0
+
+        final double expected = 876.95;
+        final double actual = inss.getTetoInss();
+        try {
+            assertEquals(expected, actual, 0.0);
         } catch (Exception e) {
             e.printStackTrace();
         }
