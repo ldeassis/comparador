@@ -6,7 +6,7 @@ import PFxPJ.taxes.Parameters;
 
 public class INSSTest {
     @Test
-    public void testGetSalario() {
+    public void testGetSalary() {
         INSS inss = null;
         try {
             inss = new INSS(1000.0, Parameters.JSON_EMBEMBEDED_STRING);
