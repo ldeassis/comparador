@@ -180,8 +180,6 @@ public class INSS {
         long temp;
         temp = Double.doubleToLongBits(salary);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(contribution);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + ((jsonObject == null) ? 0 : jsonObject.hashCode());
         return result;
     }
@@ -196,8 +194,6 @@ public class INSS {
             return false;
         INSS other = (INSS) obj;
         if (Double.doubleToLongBits(salary) != Double.doubleToLongBits(other.salary))
-            return false;
-        if (Double.doubleToLongBits(contribution) != Double.doubleToLongBits(other.contribution))
             return false;
         if (jsonObject == null) {
             if (other.jsonObject != null)
