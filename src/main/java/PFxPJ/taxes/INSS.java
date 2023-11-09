@@ -159,12 +159,15 @@ public class INSS {
         int i = 0;
         for (i = 0; i < aliquotas.length(); i++) {
             JSONObject obj = aliquotas.getJSONObject(i);
-            double aliquota = 0.0;
-            double min = obj.getDouble("min");
-            double max = obj.getDouble("max");
-            aliquota = obj.getDouble("aliquota");
+            final double min = obj.getDouble("min");
+            final double max = obj.getDouble("max");
+            final double salaryMinusMin = this.getSalary() - min;
+            final double maxMinusMin = max - min;
+            final double increment = salaryMinusMin > 0.0 && salaryMinusMin > max ? maxMinusMin : (salaryMinusMin > 0.0 ? salaryMinusMin : 0.0);
+            final double aliquota = obj.getDouble("aliquota");
+            
             old_value = valor;
-            valor += (salary >= max ? max : (salary < min ? 0 : max - salary)) * aliquota;
+            valor += increment * aliquota;
             if (old_value == valor) {
                 break;
             }
