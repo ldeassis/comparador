@@ -26,25 +26,12 @@ import org.json.JSONObject;
  *          tax, and read a JSON file containing the INSS tax rates.
  */
 public class INSS {
-    /**
-     * The salary of an employee used to calculate INSS tax.
-     */
-    private double salary;
-    /**
-     * The value of the INSS tax.
-     */
-    private double contribution;
-    /**
-     * A class representing a JSON object.this object contains the INSS taxes
-     * parameters
-     */
-    private JSONObject jsonObject;
+ 
+    private double salary; // The salary of an employee used to calculate INSS tax.
+    private JSONObject jsonObject; // A class representing a JSON object.this object contains the INSS taxes parameters
 
     /**
-     * This class represents the INSS tax calculation for a given salary.
-     * It takes the salary as a parameter and calculates the INSS tax
-     * based on it.
-     * 
+     * Constructor for the INSS class
      * @param salary    the salary of the employee
      * @param jsonString the JSON string to set the JSONObject from
      */
@@ -60,7 +47,7 @@ public class INSS {
      * @return the value of the salario attribute.
      */
     public double getSalary() {
-        return salary;
+        return this.salary;
     }
 
     /**
@@ -114,7 +101,7 @@ public class INSS {
     public final void setSalary(double salary) {
         if (salary > 0) {
             this.salary = salary;
-            this.calculaInss();
+            this.calcContribution();
         } else {
             throw new IllegalArgumentException("Salário deve ser maior que 0");
         }
@@ -157,13 +144,14 @@ public class INSS {
      * @return the value of INSS contribution, calculated using the current formula logic
      */
     public double getContribution() {
-        return this.contribution;
+        return calcContribution();
     }
 
     /**
-     * Calculates the INSS tax based on the salary and the INSS aliquot table.
+     * Calculates the INSS contribution based on the salary and the INSS aliquotas.
+     * These aliquotas are defined yearly and have to be updated in the JSON file.
      */
-    private void calculaInss() {
+    private double calcContribution() {
 
         double valor = 0;
         double old_value = 0;
@@ -181,7 +169,8 @@ public class INSS {
                 break;
             }
         }
-        this.contribution = valor > this.getTetoInss() ? this.getTetoInss() : valor;
+        return valor > this.getTetoInss() ? this.getTetoInss() : valor;
+
     }
 
     @Override
@@ -216,6 +205,21 @@ public class INSS {
         } else if (!jsonObject.equals(other.jsonObject))
             return false;
         return true;
+    }
+
+    /**
+     * Returns a string representation of the INSS object.
+     * 
+     * @return a string representation of the INSS object
+     */
+    @Override
+    public String toString() {
+            final String stringINSS = "INSS{" +
+            "salary=" + this.getSalary() +
+            ", contribution=" + this.getContribution() +
+            '}';
+
+        return stringINSS;
     }
 
 }
