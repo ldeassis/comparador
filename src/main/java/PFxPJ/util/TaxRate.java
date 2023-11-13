@@ -1,4 +1,4 @@
-package PFxPJ.taxes;
+package PFxPJ.util;
 
 /**
  * The TaxRate class represents a tax rate with a minimum and maximum income range and a corresponding tax rate.

@@ -1,7 +1,8 @@
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-import PFxPJ.taxes.TaxRate;
+import PFxPJ.util.TaxRate;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TaxRateTest {
     @Test

@@ -40,11 +40,15 @@ public class INSS {
         this.setSalary(salary);
 
     }
+
     /**
-     * Constructor for the INSS class
-     * @param salary    the salary of the employee
-     * @param jsonFilePath the JSON FilePath to set the JSONObject from
+     * This class represents the INSS tax calculation for a given salary.
+     * It takes in a salary and a JSON input stream to calculate the INSS tax.
      */
+    public INSS(double salary, InputStream jsonStream) {
+        this.setJsonObjectFromString(jsonStream.toString());
+        this.setSalary(salary);
+    }
 
     /**
      * Returns the value of the salario attribute.
@@ -160,19 +164,19 @@ public class INSS {
 
         double valor = 0;
         double old_value = 0;
-        JSONArray aliquotas = this.getInssArray();
+        JSONArray taxRates = this.getInssArray();
         int i = 0;
-        for (i = 0; i < aliquotas.length(); i++) {
-            JSONObject obj = aliquotas.getJSONObject(i);
+        for (i = 0; i < taxRates.length(); i++) {
+            JSONObject obj = taxRates.getJSONObject(i);
             final double min = obj.getDouble("min");
             final double max = obj.getDouble("max");
             final double salaryMinusMin = this.getSalary() - min;
             final double maxMinusMin = max - min;
             final double increment = salaryMinusMin > 0.0 && salaryMinusMin > max ? maxMinusMin : (salaryMinusMin > 0.0 ? salaryMinusMin : 0.0);
-            final double aliquota = obj.getDouble("aliquota");
+            final double rate = obj.getDouble("rate");
 
             old_value = valor;
-            valor += increment * aliquota;
+            valor += increment * rate;
             if (old_value == valor) {
                 break;
             }
