@@ -14,7 +14,7 @@ public class INSSTest {
         INSS inss = null;
         JsonResourceReader jsonResource = null;
         try {
-            try{
+            try {
                 jsonResource = new JsonResourceReader(Parameters.INSS_JSON_FILE_PATH_STRING);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -40,7 +40,7 @@ public class INSSTest {
         INSS inss = null;
         JsonResourceReader jsonResource = null;
         try {
-            try{
+            try {
                 jsonResource = new JsonResourceReader(Parameters.INSS_JSON_FILE_PATH_STRING);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -65,25 +65,25 @@ public class INSSTest {
         JsonResourceReader jsonResource = null;
 
         List<ParDouble> list = new ArrayList<ParDouble>();
-            try{
-                jsonResource = new JsonResourceReader(Parameters.INSS_JSON_FILE_PATH_STRING);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            jsonResource = new JsonResourceReader(Parameters.INSS_JSON_FILE_PATH_STRING);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         list.add(new ParDouble(1000.0, 75.0));
         list.add(new ParDouble(2000.0, 160.2));
         list.add(new ParDouble(3000.0, 301.64));
         list.add(new ParDouble(5000.0, 663.09));
         list.add(new ParDouble(10000.0, 876.95));
 
-        for(ParDouble par : list) {
+        for (ParDouble par : list) {
             try {
                 inss = new INSS(par.getValue(), jsonResource.getJsonObject().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             final double expected = par.getExpected();
-            final double actual = inss.getContribution();
+            final double actual = inss.getTaxValue();
             try {
                 assertEquals(expected, actual, 0.01);
             } catch (Exception e) {
@@ -91,5 +91,5 @@ public class INSSTest {
             } // check that the actual contribution matches the expected contribution
 
         }
-     }
+    }
 }

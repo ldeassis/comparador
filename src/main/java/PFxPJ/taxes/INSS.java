@@ -25,14 +25,16 @@ import org.json.JSONObject;
  *          INSS
  *          tax, and read a JSON file containing the INSS tax rates.
  */
-public class INSS {
- 
+public class INSS implements Tax {
+
     private double salary; // The salary of an employee used to calculate INSS tax.
-    private JSONObject jsonObject; // A class representing a JSON object.this object contains the INSS taxes parameters
+    private JSONObject jsonObject; // A class representing a JSON object.this object contains the INSS taxes
+                                   // parameters
 
     /**
      * Constructor for the INSS class
-     * @param salary    the salary of the employee
+     * 
+     * @param salary     the salary of the employee
      * @param jsonString the JSON string to set the JSONObject from
      */
     public INSS(double salary, String jsonString) {
@@ -117,22 +119,6 @@ public class INSS {
     }
 
     /**
-     * A JSONArray is an ordered sequence of values. Its external text form is a
-     * string wrapped in square brackets with commas separating the values. The
-     * internal form is an object having get() and opt() methods for accessing the
-     * values by index, and put() methods for adding or replacing values. The values
-     * can be any of these types: Boolean, JSONArray, JSONObject, Number, String, or
-     * the JSONObject.NULL object.
-     */
-    private JSONArray getInssArray() {
-        if (jsonObject.has("INSS")) {
-            return jsonObject.getJSONArray("INSS");
-        } else {
-            throw new IllegalArgumentException("O JSON não contém a chave INSS");
-        }
-    }
-
-    /**
      * Returns the maximum value for INSS tax calculation.
      * 
      * @return the maximum value for INSS tax calculation.
@@ -150,39 +136,11 @@ public class INSS {
     /**
      * Returns the value of INSS contribution.
      *
-     * @return the value of INSS contribution, calculated using the current formula logic
+     * @return the value of INSS tax calculated (contribution), calculated using the current formula
+     *         logic
      */
-    public double getContribution() {
+    public double getTaxValue() {
         return calcContribution();
-    }
-
-    /**
-     * Calculates the INSS contribution based on the salary and the INSS aliquotas.
-     * These aliquotas are defined yearly and have to be updated in the JSON file.
-     */
-    private double calcContribution() {
-
-        double valor = 0;
-        double old_value = 0;
-        JSONArray taxRates = this.getInssArray();
-        int i = 0;
-        for (i = 0; i < taxRates.length(); i++) {
-            JSONObject obj = taxRates.getJSONObject(i);
-            final double min = obj.getDouble("min");
-            final double max = obj.getDouble("max");
-            final double salaryMinusMin = this.getSalary() - min;
-            final double maxMinusMin = max - min;
-            final double increment = salaryMinusMin > 0.0 && salaryMinusMin > max ? maxMinusMin : (salaryMinusMin > 0.0 ? salaryMinusMin : 0.0);
-            final double rate = obj.getDouble("rate");
-
-            old_value = valor;
-            valor += increment * rate;
-            if (old_value == valor) {
-                break;
-            }
-        }
-        return valor > this.getTetoInss() ? this.getTetoInss() : valor;
-
     }
 
     @Override
@@ -222,12 +180,58 @@ public class INSS {
      */
     @Override
     public String toString() {
-            final String stringINSS = "INSS{" +
-            "salary=" + this.getSalary() +
-            ", contribution=" + this.getContribution() +
-            '}';
+        final String stringINSS = "INSS{" +
+                "salary=" + this.getSalary() +
+                ", contribution=" + this.getTaxValue() +
+                '}';
 
         return stringINSS;
+    }
+
+    /**
+     * A JSONArray is an ordered sequence of values. Its external text form is a
+     * string wrapped in square brackets with commas separating the values. The
+     * internal form is an object having get() and opt() methods for accessing the
+     * values by index, and put() methods for adding or replacing values. The values
+     * can be any of these types: Boolean, JSONArray, JSONObject, Number, String, or
+     * the JSONObject.NULL object.
+     */
+    private JSONArray getInssArray() {
+        if (jsonObject.has("INSS")) {
+            return jsonObject.getJSONArray("INSS");
+        } else {
+            throw new IllegalArgumentException("O JSON não contém a chave INSS");
+        }
+    }
+
+    /**
+     * Calculates the INSS contribution based on the salary and the INSS aliquotas.
+     * These aliquotas are defined yearly and have to be updated in the JSON file.
+     */
+    private double calcContribution() {
+
+        double valor = 0;
+        double old_value = 0;
+        JSONArray taxRates = this.getInssArray();
+        int i = 0;
+        for (i = 0; i < taxRates.length(); i++) {
+            JSONObject obj = taxRates.getJSONObject(i);
+            final double min = obj.getDouble("min");
+            final double max = obj.getDouble("max");
+            final double salaryMinusMin = this.getSalary() - min;
+            final double maxMinusMin = max - min;
+            final double increment = salaryMinusMin > 0.0 && salaryMinusMin > max ? maxMinusMin
+                    : (salaryMinusMin > 0.0 ? salaryMinusMin : 0.0);
+            final double rate = obj.getDouble("rate");
+
+            old_value = valor;
+            valor += increment * rate;
+            if (old_value == valor) {
+                break;
+            }
+        }
+        return valor > this.getTetoInss() ? this.getTetoInss() : valor;
+
     }
 
 }
