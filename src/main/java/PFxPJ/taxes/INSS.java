@@ -40,6 +40,11 @@ public class INSS {
         this.setSalary(salary);
 
     }
+    /**
+     * Constructor for the INSS class
+     * @param salary    the salary of the employee
+     * @param jsonFilePath the JSON FilePath to set the JSONObject from
+     */
 
     /**
      * Returns the value of the salario attribute.
@@ -165,7 +170,7 @@ public class INSS {
             final double maxMinusMin = max - min;
             final double increment = salaryMinusMin > 0.0 && salaryMinusMin > max ? maxMinusMin : (salaryMinusMin > 0.0 ? salaryMinusMin : 0.0);
             final double aliquota = obj.getDouble("aliquota");
-            
+
             old_value = valor;
             valor += increment * aliquota;
             if (old_value == valor) {
