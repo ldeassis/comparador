@@ -9,6 +9,7 @@ import PFxPJ.util.JsonResourceReader;
 import PFxPJ.util.ParDouble;
 
 public class INSSTest {
+    
     @Test
     public void testGetSalary() {
         INSS inss = null;

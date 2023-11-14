@@ -20,6 +20,6 @@ public final class Parameters {
      * String default para a localização da tabela embutida do INSS
      * Quando funcionar, o json String acima será apagado do código
      */
-    public static final String INSS_JSON_FILE_PATH_STRING = "/inss.json";
+    public static final String INSS_JSON_FILE_PATH_STRING = "/parameters.json";
 
 }
