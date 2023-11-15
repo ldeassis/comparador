@@ -17,8 +17,8 @@ import org.json.JSONObject;
  * tax rate.
  */
 public abstract class TaxRate {
-    private double salary; // The salary of an employee used to calculate INSS tax.
-    private JSONObject jsonObject; // A class representing a JSON object.this object contains the INSS taxes
+    private double salary; // The salary of an employee used to calculate tax Value
+    private JSONObject jsonObject; // A class representing a JSON object.this object contains the tax rates and ranges
     
 
     // parameters
@@ -95,7 +95,7 @@ public abstract class TaxRate {
     }
 
     /**
-     * Sets the salary of the employee and calculates the INSS tax.
+     * Sets the salary of the employee and calculates the tax.
      * 
      * @param salary the salary of the employee
      * @throws IllegalArgumentException if the salary is less than or equal to 0
@@ -105,7 +105,7 @@ public abstract class TaxRate {
             this.salary = salary;
             this.calcContribution();
         } else {
-            throw new IllegalArgumentException("Salário deve ser maior que 0");
+            throw new IllegalArgumentException("Salary must be greater than 0.0");
         }
     }
 
@@ -119,29 +119,10 @@ public abstract class TaxRate {
         return this.calcContribution();
     }
 
-
     public abstract double calcContribution();
 
     protected JSONObject getJsonObject() {
         return this.jsonObject;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (this.getClass() != obj.getClass())
-            return false;
-        INSS other = (INSS) obj;
-        if (Double.doubleToLongBits(salary) != Double.doubleToLongBits(other.getSalary()))
-            return false;
-        if (jsonObject == null) {
-            if (other.getJsonObject() != null)
-                return false;
-        } else if (!this.jsonObject.equals(other.getJsonObject()))
-            return false;
-        return true;
-    }
 }

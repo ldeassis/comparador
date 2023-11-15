@@ -9,14 +9,14 @@ import PFxPJ.util.JsonResourceReader;
 import PFxPJ.util.ParDouble;
 
 public class INSSTest {
-    
+
     @Test
     public void testGetSalary() {
         INSS inss = null;
         JsonResourceReader jsonResource = null;
         try {
             try {
-                jsonResource = new JsonResourceReader(Parameters.INSS_JSON_FILE_PATH_STRING);
+                jsonResource = new JsonResourceReader(Parameters.JSON_FILE_PATH_STRING);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -42,7 +42,7 @@ public class INSSTest {
         JsonResourceReader jsonResource = null;
         try {
             try {
-                jsonResource = new JsonResourceReader(Parameters.INSS_JSON_FILE_PATH_STRING);
+                jsonResource = new JsonResourceReader(Parameters.JSON_FILE_PATH_STRING);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -67,7 +67,7 @@ public class INSSTest {
 
         List<ParDouble> list = new ArrayList<ParDouble>();
         try {
-            jsonResource = new JsonResourceReader(Parameters.INSS_JSON_FILE_PATH_STRING);
+            jsonResource = new JsonResourceReader(Parameters.JSON_FILE_PATH_STRING);
         } catch (Exception e) {
             e.printStackTrace();
         }

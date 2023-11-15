@@ -20,7 +20,6 @@ import org.json.JSONObject;
  */
 public class INSS extends TaxRate implements Tax {
 
-
     /**
      * This class represents the INSS tax calculation for a given salary.
      * It extends the abstract class Tax and implements its abstract methods.
@@ -45,8 +44,6 @@ public class INSS extends TaxRate implements Tax {
         }
     }
 
-
-
     /**
      * A JSONArray is an ordered sequence of values. Its external text form is a
      * string wrapped in square brackets with commas separating the values. The
@@ -69,28 +66,28 @@ public class INSS extends TaxRate implements Tax {
      * These aliquotas are defined yearly and have to be updated in the JSON file.
      */
     public double calcContribution() {
-
-        double valor = 0;
+        final double fatorEscala = Math.pow(10, 5);
+        double value = 0.0;
         double old_value = 0;
         JSONArray taxRates = this.getInssArray();
         int i = 0;
         for (i = 0; i < taxRates.length(); i++) {
             JSONObject obj = taxRates.getJSONObject(i);
-            final double min = obj.getDouble("min");
-            final double max = obj.getDouble("max");
+            final double min = obj.has("min") ? obj.getDouble("min") : 0.0;
+            final double max = obj.has("max") ? obj.getDouble("max") : Double.MAX_VALUE;
             final double salaryMinusMin = this.getSalary() - min;
             final double maxMinusMin = max - min;
             final double increment = salaryMinusMin > 0.0 && salaryMinusMin > max ? maxMinusMin
                     : (salaryMinusMin > 0.0 ? salaryMinusMin : 0.0);
             final double rate = obj.getDouble("rate");
 
-            old_value = valor;
-            valor += increment * rate;
-            if (old_value == valor) {
+            old_value = value;
+            value += Math.round((increment * rate) * fatorEscala) / fatorEscala;;
+            if (old_value == value) {
                 break;
             }
         }
-        return valor > this.getTetoInss() ? this.getTetoInss() : valor;
+        return value > this.getTetoInss() ? this.getTetoInss() : value;
 
     }
 
@@ -101,12 +98,29 @@ public class INSS extends TaxRate implements Tax {
      */
     @Override
     public String toString() {
-        final String stringINSS = "INSS{" +
-                "salary=" + this.getSalary() +
-                ", contribution=" + this.getTaxValue() +
+        final String stringINSS = "INSS {" +
+                "salary =" + this.getSalary() +
+                ", INSS contribution = " + this.getTaxValue() +
                 '}';
 
         return stringINSS;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final INSS other = (INSS) obj;
+        if (Double.doubleToLongBits(this.getSalary()) != Double.doubleToLongBits(other.getSalary()))
+            return false;
+        if (Double.doubleToLongBits(this.getTaxValue()) != Double.doubleToLongBits(other.getTaxValue()))
+            return false;
+        return true;
+    }
+
 
 }

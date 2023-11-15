@@ -18,18 +18,16 @@ import org.json.JSONObject;
  *          tax, and read a JSON file containing the INSS tax rates.
  */
 public class IRPF extends TaxRate implements Tax {
-    private INSS inss;
-    
+
     /**
      * This class represents the INSS tax calculation for a given salary.
      * It extends the abstract class Tax and implements its abstract methods.
      */
     public IRPF(double salary, String jsonString) {
         super(salary, jsonString);
-        inss = new INSS(salary, jsonString);
     }
 
-        /**
+    /**
      * A JSONArray is an ordered sequence of values. Its external text form is a
      * string wrapped in square brackets with commas separating the values. The
      * internal form is an object having get() and opt() methods for accessing the
@@ -42,42 +40,69 @@ public class IRPF extends TaxRate implements Tax {
         if (jsonObject.has("IRPF")) {
             return jsonObject.getJSONArray("IRPF");
         } else {
-            throw new IllegalArgumentException("O JSON não contém a chave INSS");
+            throw new IllegalArgumentException("O JSON não contém a chave IRPF");
         }
     }
 
     /**
-     * Calculates the INSS contribution based on the salary and the IRPF rates.
+     * Calculates the IRPF contribution based on the salary and the IRPF rates.
      * These aliquotas are defined yearly and have to be updated in the JSON file.
      */
     public double calcContribution() {
-
-        double salaryMinusINSS = this.getSalary() - inss.calcContribution();
-        double valor = 0;
-        double old_value = 0;
+        final double fatorEscala = Math.pow(10, 5);
+        INSS inss = new INSS(this.getSalary(), this.getJsonObject().toString());
+        final double inssTax = Math.round(inss.calcContribution() * fatorEscala) / fatorEscala;
+        final double salaryMinusINSS = Math.round((this.getSalary() - inssTax) * fatorEscala) / fatorEscala;
+        double value = 0.0;
         JSONArray taxRates = this.getIRPFArray();
         int i = 0;
         for (i = 0; i < taxRates.length(); i++) {
-            JSONObject obj = taxRates.getJSONObject(i);
-            final double min = obj.has("min") ? obj.getDouble("min") : 0.0;
-            final double max = obj.has("max") ? obj.getDouble("max") : Double.MAX_VALUE;
-            final double salaryMinusMin = salaryMinusINSS - min;
-            final double maxMinusMin = max - min;
-            final double increment = salaryMinusMin > 0.0 && salaryMinusMin > max ? maxMinusMin
-                    : (salaryMinusMin > 0.0 ? salaryMinusMin : 0.0);
-            final double rate = obj.getDouble("rate");
+            JSONObject bracket = taxRates.getJSONObject(i);
+            final double min = bracket.has("min") ? bracket.getDouble("min") : 0.0;
+            final double max = bracket.has("max") ? bracket.getDouble("max") : Double.MAX_VALUE;
+            final boolean inRange = salaryMinusINSS >= min && salaryMinusINSS <= max;
+             
+            if (inRange) {
+                final double deduct = bracket.has("deduct") ? bracket.getDouble("deduct") : 0.0;
+                final double rate = bracket.has("rate") ? bracket.getDouble("rate") : 0.0;
 
-            old_value = valor;
-            valor += increment * rate;
-            if (old_value == valor) {
+                value = Math.round((salaryMinusINSS * rate) * fatorEscala) / fatorEscala - deduct;
                 break;
             }
         }
-        return valor;
+        return value;
 
     }
 
+    @Override
+    public String toString() {
+        final double salary = this.getSalary();
+        final double inssTax = new INSS(this.getSalary(), this.getJsonObject().toString()).calcContribution();
+        final double salaryCalc = salary - inssTax;
+        final double irpfTax = this.calcContribution();
 
- 
+        return "IRPF {" +
+                "salary = " + salary +
+                ", INSS Tax = " + inssTax +
+                ", Salary for IRPF Tax = " + salaryCalc +
+                ", IRPF Tax = " + irpfTax +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final IRPF other = (IRPF) obj;
+        if (Double.doubleToLongBits(this.getSalary()) != Double.doubleToLongBits(other.getSalary()))
+            return false;
+        if (Double.doubleToLongBits(this.getTaxValue()) != Double.doubleToLongBits(other.getTaxValue()))
+            return false;
+        return true;
+    }
+
 }
-
